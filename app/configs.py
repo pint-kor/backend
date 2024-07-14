@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     KAKAO_CLIENT_ID: str = None
     KAKAO_CLIENT_SECRET: str = None
     KAKAO_CALLBACK_URL: str = None
+    
+    TOUR_API_KEY: str
+    TOUR_API_URL: str
         
     @property
     def URL(self) -> str:
