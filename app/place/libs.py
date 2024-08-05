@@ -8,3 +8,13 @@ SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
 credentials = service_account.Credentials.from_service_account_file(CLIENT_SECRET_FILE, scopes=SCOPES)
 
+
+from enum import Enum
+
+class IncludedType(Enum):
+    ART_GALLERY = "art_gallery"
+    MUSEUM = "museum"
+    BAR = "bar"
+    CAFE = "cafe"
+    RESTAURANT = "restaurant"
+    PARK = "park"

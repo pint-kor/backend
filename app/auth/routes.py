@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends
 from .libs import fastapi_users, auth_backend, current_active_user
 from .models import User, UserCreate, UserRead, UserUpdate
+from ..blog.models import Blog
 from .kakao.routes import kakao_oauth_router
 
 router = APIRouter()
@@ -24,3 +25,26 @@ routers = [
 @router.get("/authenticated-route")
 async def authenticated_route(user = Depends(current_active_user)):
     return {"message": f"Hello {user.email}!"}
+
+@router.post("/users/sync")
+async def sync_users(user: User = Depends(current_active_user)) -> User:
+    heartPosts = user.heartPosts
+    bookMarkPosts = user.bookMarkPosts
+    
+    Blog
+    
+    for postId in heartPosts:
+        # check if the post exists
+        post = await Blog.get(postId)
+        if post:
+            user.heartPosts.remove(postId)
+            
+    for postId in bookMarkPosts:
+        # check if the post exists
+        post = await Blog.get(postId)
+        if post:
+            user.bookMarkPosts.remove(postId)
+            
+    await user.save()
+    return user
+    

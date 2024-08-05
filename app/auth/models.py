@@ -15,7 +15,7 @@ class User(BeanieBaseUser, Document, AppBaseModel):
     oauth_accounts: List[OAuthAccount] = Field(default_factory=list)
     
     email: EmailStr
-    hashed_password: SecretStr
+    hashed_password: str
     
     username: Optional[str] = Field(None, description='Username')
     first_name: Optional[str] = Field(None)
@@ -25,6 +25,11 @@ class User(BeanieBaseUser, Document, AppBaseModel):
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     last_login_at: datetime = Field(default_factory=datetime.now)
+    
+    myPosts: List[PydanticObjectId] = Field(default_factory=list)
+    heartPosts: List[PydanticObjectId] = Field(default_factory=list)
+    bookMarkPosts: List[PydanticObjectId] = Field(default_factory=list)
+
     
 class UserRead(schemas.BaseUser[PydanticObjectId], User):
     pass
