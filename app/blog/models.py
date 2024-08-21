@@ -5,6 +5,7 @@ from ..auth.models import User
 from datetime import datetime
 from pydantic import Field
 from ..base.models import PyObjectId
+from ..place.models import Place
 from typing import Optional, List, Tuple
 import pymongo
 
@@ -16,7 +17,6 @@ class BlogAPI(AppBaseModel, Document):
     content: str
     visited_at: datetime = Field(default_factory=datetime.now)
     placeId: str = Field(default="")
-    location: Optional[GeoObject] = Field(default=None)
     isPrivate: Optional[bool] = Field(default=False)
     
 class Blog(BlogAPI):
@@ -26,11 +26,6 @@ class Blog(BlogAPI):
     heartCount: int = Field(default=0)
     bookMarkCount: int = Field(default=0)
     images: List[str] = Field(default_factory=list)
-    
-    class Settings:
-        indexes = [
-            [("location", pymongo.GEOSPHERE)]
-        ]
     
 async def read(id: Optional[int]) -> List[Blog]:
     if (id.is_valid()):

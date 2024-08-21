@@ -29,6 +29,21 @@ class User(BeanieBaseUser, Document, AppBaseModel):
     myPosts: List[PydanticObjectId] = Field(default_factory=list)
     heartPosts: List[PydanticObjectId] = Field(default_factory=list)
     bookMarkPosts: List[PydanticObjectId] = Field(default_factory=list)
+    followers: List[PydanticObjectId] = Field(default_factory=list)
+    following: List[PydanticObjectId] = Field(default_factory=list)
+    
+class UserInfo(AppBaseModel, Document):
+    email: EmailStr
+    username: Optional[str]
+    created_at: datetime
+    updated_at: datetime
+    last_login_at: datetime
+    myPosts: List[PydanticObjectId]
+    heartPosts: List[PydanticObjectId]
+    bookMarkPosts: List[PydanticObjectId]
+    followers: List[PydanticObjectId]
+    following: List[PydanticObjectId]
+    
 
     
 class UserRead(schemas.BaseUser[PydanticObjectId], User):
@@ -38,5 +53,6 @@ class UserCreate(schemas.BaseUserCreate):
     pass
 
 class UserUpdate(schemas.BaseUserUpdate):
+    username: Optional[str] = None
     pass
     

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Path, Query, Depends
 from .models import Blog, BlogAPI
 from ..auth.models import User
+from ..place.models import Place
 from typing import List
 from bson import ObjectId
 from typing import Union
@@ -11,12 +12,18 @@ router = APIRouter()
 
 @router.get("/blog", tags=["blog"], description="placeId 지정시 다른 파라미터 무시. placeId 미지정시 다른 파라미터로 검색")
 async def blog(
+        googlePlaceId: Union[str, None] = Query(None),
         placeId: Union[str, None] = Query(None),
         latitude: Union[float, None] = Query(None),
         longitude: Union[float, None] = Query(None),
         radius: Union[int, None] = Query(None),
     ) -> List[Blog]:
     
+    if googlePlaceId:
+        place = await Place.find_one(Place.googlePlaceId == googlePlaceId)
+        
+        if place:
+            return await Blog.find(Blog.placeId == str(place.id), limit=20).to_list()
     
     if placeId:
         return await Blog.find(Blog.placeId == placeId, limit=20).to_list()
@@ -48,7 +55,6 @@ async def blog_post(blogAPI: BlogAPI, user: User = Depends(current_active_user))
     
     # casting BlogAPI to Blog
     blog = Blog(
-        location=blogAPI.location,
         content=blogAPI.content,
         visited_at=blogAPI.visited_at,
         placeId=blogAPI.placeId,
